@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pause Details</title>
+
+    <style>
+        
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background: linear-gradient(to right, #eef2f7, #f8fafc);
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 920px;
+        margin: auto;
+    }
+
+    h2 {
+        color: #174299;
+        margin-bottom: 20px;
+        letter-spacing: 0.5px;
+    }
+
+    .card {
+        background: white;
+        padding: 22px;
+        margin-bottom: 22px;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        transition: all 0.25s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+    }
+
+    .info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+    }
+
+    .label {
+        font-weight: 600;
+        font-size: 13px;
+        color: #0e4086;
+        margin-bottom: 4px;
+    }
+
+    .highlight {
+        color: #e91e63;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    th {
+        background: linear-gradient(135deg, #16a34a, #15803d);
+        color: white;
+        padding: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    td {
+        padding: 12px;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+        color: #333;
+    }
+
+    tr:hover {
+        background: #f9fafb;
+        transition: 0.2s;
+    }
+
+    .status-active {
+        color: #16a34a;
+        font-weight: bold;
+    }
+
+    .status-paused {
+        color: #dc2626;
+        font-weight: bold;
+    }
+
+    .back-btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 18px;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.25s ease;
+    }
+
+    .back-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    }
+</style>
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Pause Details</h2>
+
+    <!-- SERVICE INFO -->
+    <div class="card">
+        <div class="info">
+
+            <div>
+                <div class="label">Service Name</div>
+                <div>{{ subs.get("service_name","not found") }}</div>
+            </div>
+
+            <div>
+                <div class="label">Original End Date</div>
+                <div>{{ subs.get("end_date")}}</div>
+            </div>
+
+            <div>
+                <div class="label">Status</div>
+                <div>
+                    {% if  subs["status"]|lower == 'active' %}
+                        <span class="status-active">Active</span>
+                    {% else %}
+                        <span class="status-paused">Paused</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <div class="label">Total Pause Days</div>
+                <div class="highlight">{{ total_pause_days }}</div>
+            </div>
+
+            <div>
+               <div class="label">Extended End Date</div>
+              <div class="highlight">
+        {% if is_Paused %}
+            <span style="color:red;">Currently Paused</span>
+        {% else %}
+            {{ extended_end_date }}
+        {% endif %}
+
+                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PAUSE HISTORY -->
+    <div class="card">
+        <h3>Pause History</h3>
+
+        {% if pauses|length == 0 %}
+            <p style="text-align:center; color:gray;">No pause history available</p>
+        {% else %}
+
+        <table>
+            <tr>
+                <th>Start</th>
+                <th>End</th>
+                <th>Days</th>
+            </tr>
+
+            {% for p in pauses %}
+            <tr>
+                <td>{{ p["pause_start_date"] }}</td>
+                <td>
+                    {% if p["pause_end_date"] %}
+                        {{ p["pause_end_date"] }}
+                    {% else %}
+                        Ongoing
+                    {% endif %}
+                </td>
+                <td>{{ p["pause_days"] if p["pause_days"] else "-" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        {% endif %}
+    </div>
+
+    <a href="/dashboard" class="back-btn">⬅ Back</a>
+
+</div>
+
+</body>
+</html>

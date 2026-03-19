@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TrackMySubs | Daily Service Tracker</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<header>
+<nav class="navbar">
+
+<div class="logo">TrackMySubs</div>
+
+<ul class="nav-links">
+<li><a href="#">Home</a></li>
+<li><a href="#features">Features</a></li>
+<li><a href="#steps">How it works</a></li>
+<li><a href="#">About</a></li>
+<li><a href="/login">Login</a></li>
+<li><a href="/register" class="signup-btn">Sign Up</a></li>
+</ul>
+
+</nav>
+</header>
+
+
+
+<!-- HERO SECTION -->
+
+<section class="hero">
+
+<div class="hero-container">
+
+<div class="hero-text">
+
+<h1>
+Manage Your Daily Services
+<span>In One Place</span>
+</h1>
+
+<p>
+Track milk delivery, newspaper and tiffin subscriptions easily.
+Pause, resume and monitor services anytime.
+</p>
+
+<div class="hero-buttons">
+<a href="/register" class="btn-primary">Start Tracking</a>
+<a href="#features" class="btn-outline">Learn More</a>
+</div>
+
+<div class="service-tags">
+<span>🥛 Milk</span>
+<span>📰 Newspaper</span>
+<span>🍱 Tiffin</span>
+</div>
+
+</div>
+
+
+<div class="hero-image">
+<img src="{{ url_for('static', filename='images/home.png') }}" alt="Subscription tracker illustration">
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- FEATURES SECTION -->
+
+<section class="features" id="features">
+
+<div class="section-header">
+<h2>Features</h2>
+<p>Everything you need to manage daily services easily</p>
+</div>
+
+<div class="feature-container">
+
+<div class="feature-card">
+<div class="feature-icon">📦</div>
+<h3>Service Tracking</h3>
+<p>Track milk, newspaper, tiffin and other daily services easily.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">⏸</div>
+<h3>Pause Anytime</h3>
+<p>Pause subscriptions when travelling or not using services.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">📊</div>
+<h3>Billing Insights</h3>
+<p>Understand your monthly spending on daily services.</p>
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- HOW IT WORKS -->
+
+<section class="steps" id="steps">
+
+<div class="section-header">
+<h2>How It Works</h2>
+<p>Start managing your subscriptions in three simple steps</p>
+</div>
+
+<div class="steps-container">
+
+<div class="step-card">
+<div class="step-number">1</div>
+<h3>Add Service</h3>
+<p>Add milk, newspaper or tiffin subscription.</p>
+</div>
+
+<div class="step-card">
+<div class="step-number">2</div>
+<h3>Track</h3>
+<p>Track billing cycle, status and subscription details.</p>
+</div>
+
+<div class="step-card">
+<div class="step-number">3</div>
+<h3>Manage</h3>
+<p>Pause or resume services anytime.</p>
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- FOOTER -->
+
+<footer>
+
+<div class="footer-container">
+
+<div class="footer-brand">
+<h3>TrackMySubs</h3>
+<p>Manage all your daily subscriptions in one place.</p>
+</div>
+
+<div class="footer-links">
+<h4>Quick Links</h4>
+<p>Features</p>
+<p>How it works</p>
+<p>Support</p>
+</div>
+
+<div class="footer-contact">
+<h4>Contact</h4>
+<p>support@trackmysubs.com</p>
+</div>
+
+</div>
+
+<p class="copyright">© 2026 TrackMySubs</p>
+
+</footer>
+
+
+</body>
+</html>

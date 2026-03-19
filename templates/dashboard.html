@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TrackMySubs · Dashboard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Inter',sans-serif;
+background:white;
+color:#1e293b;
+min-height:100vh;
+}
+
+/* HEADER */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:18px 40px;
+
+background:linear-gradient(135deg,#3b82f6);
+
+backdrop-filter:blur(8px);
+
+border-bottom:1px solid rgba(255,255,255,0.25);
+
+box-shadow:0 8px 20px rgba(0,0,0,0.25);
+
+position:sticky;
+top:0;
+z-index:10;
+}
+
+.logo-area{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.logo-icon{
+width:42px;
+height:42px;
+background:#1e293b;
+border-radius:12px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+color:#38bdf8;
+font-size:1.4rem;
+}
+
+.header h2{
+font-size:1.6rem;
+font-weight:700;
+color:white;
+}
+
+/* FLASH MESSAGE */
+
+.flash-message{
+background:rgb(167, 18, 145);
+border:1px solid rgba(35, 38, 199, 0.4);
+color:#d1fae5;
+padding:8px 20px;
+border-radius:40px;
+font-size:.9rem;
+}
+
+/* LOGOUT BUTTON */
+
+.header a{
+background:white;
+padding:10px 20px;
+border-radius:30px;
+text-decoration:none;
+color:#2563eb;
+font-weight:600;
+display:flex;
+align-items:center;
+gap:8px;
+transition:.3s;
+}
+
+.header a:hover{
+transform:translateY(-2px);
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* CONTAINER */
+
+.container{
+max-width:1300px;
+margin:auto;
+padding:40px;
+}
+
+/* KPI CARDS */
+
+.cards{
+display:flex;
+gap:25px;
+flex-wrap:wrap;
+margin-bottom:40px;
+}
+
+.card{
+flex:1 1 200px;
+
+padding:30px;
+
+border-radius:20px;
+
+text-align:center;
+
+color:white;
+
+box-shadow:0 15px 30px rgba(0,0,0,0.25);
+
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-6px);
+}
+
+/* CARD COLORS */
+
+.card:nth-child(1){
+background:linear-gradient(135deg,#88d5a4,#0f9841);
+}
+
+.card:nth-child(2){
+background:linear-gradient(135deg,#cac229,#e29843);
+}
+
+.card:nth-child(3){
+background:linear-gradient(135deg,#c35454,#b91c1c);
+}
+
+.card:nth-child(4){
+background:linear-gradient(135deg,#b421d5,#9918b0);
+}
+
+.card-icon{
+font-size:2.2rem;
+margin-bottom:10px;
+}
+
+.card h3{
+font-size:.9rem;
+letter-spacing:1px;
+text-transform:uppercase;
+opacity:.9;
+}
+
+.card p{
+font-size:2.4rem;
+font-weight:700;
+margin-top:5px;
+}
+
+/* ADD SERVICE BUTTON */
+
+.add-service-container{
+display:flex;
+justify-content:center;
+margin-bottom:40px;
+}
+
+.add-btn{
+background:linear-gradient(135deg,#3B82F6,#2563EB);
+border:none;
+padding:16px 50px;
+border-radius:50px;
+font-size:1.1rem;
+color:white;
+font-weight:600;
+cursor:pointer;
+display:flex;
+align-items:center;
+gap:10px;
+box-shadow:0 10px 25px rgba(37,99,235,0.5);
+transition:.3s;
+}
+
+.add-btn:hover{
+transform:translateY(-3px);
+box-shadow:0 15px 35px rgba(37,99,235,0.6);
+}
+
+/* TABLE */
+
+.table-wrapper{
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(10px);
+border-radius:20px;
+border:1px solid rgba(255,255,255,0.25);
+overflow:hidden;
+box-shadow:0 20px 40px rgba(0,0,0,0.25);
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th{
+background:rgba(30,64,175,0.9);
+color:white;
+padding:16px;
+text-align:left;
+font-size:.8rem;
+text-transform:uppercase;
+}
+
+td{
+padding:16px;
+border-bottom:1px solid rgba(255,255,255,0.2);
+background:rgba(255,255,255,0.05);
+color:#0f172a;
+}
+
+tr:hover td{
+background:rgba(255,255,255,0.25);
+}
+
+/* STATUS */
+
+.status-pill{
+padding:5px 14px;
+border-radius:30px;
+font-size:.8rem;
+font-weight:600;
+color:white;
+}
+
+.status-pill.active{
+background:#16a34a;
+}
+
+.status-pill.paused{
+background:#f59e0b;
+}
+
+/* ACTION BUTTONS */
+
+.action-group{
+display:flex;
+gap:8px;
+}
+
+.btn-icon{
+background:white;
+border:1px solid rgba(0,0,0,0.1);
+padding:6px 12px;
+border-radius:30px;
+font-size:.8rem;
+color:#1e293b;
+text-decoration:none;
+display:flex;
+align-items:center;
+gap:6px;
+transition:.2s;
+}
+
+.btn-icon:hover{
+background:#3b82f6;
+color:white;
+}
+
+/* EMPTY DATA */
+
+.no-data{
+text-align:center;
+padding:40px;
+color:#1e293b;
+}
+
+/* FOOTER INFO */
+
+.table-footer-hint{
+padding:10px 20px;
+font-size:.8rem;
+color:#1e293b;
+display:flex;
+justify-content:flex-end;
+gap:20px;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+.container{
+padding:25px;
+}
+
+.cards{
+flex-direction:column;
+}
+
+.action-group{
+flex-direction:column;
+}
+
+}
+.back-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px;
+            background: blue;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+.paid {
+    background: #ecfdf5;   /* light green */
+    color: #059669;
+    border: 1px solid #a7f3d0;
+}
+
+.unpaid {
+    background: #fef2f2;   /* light red */
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+/* Improve button look */
+.btn-icon.paid,
+.btn-icon.unpaid {
+    font-weight: 500;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<div class="logo-area">
+<div class="logo-icon"><i class="fas fa-wave-square"></i></div>
+<h2>TrackMySubs</h2>
+</div>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div class="flash-message">
+<i class="fas fa-check-circle"></i> {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+
+</div>
+
+<div class="container">
+
+<div class="cards">
+
+<div class="card">
+<div class="card-icon"><i class="fas fa-bolt"></i></div>
+<h3>Active</h3>
+<p>{{ active }}</p>
+</div>
+
+<div class="card">
+<div class="card-icon"><i class="fas fa-pause"></i></div>
+<h3>Paused</h3>
+<p>{{ paused }}</p>
+</div>
+
+<div class="card">
+<div class="card-icon"><i class="fas fa-file-invoice"></i></div>
+<h3>Bills Due</h3>
+<p>{{ due }}</p>
+</div>
+
+<div class="card">
+<div class="card-icon"><i class="fas fa-cubes"></i></div>
+<h3>Total</h3>
+<p>{{ total }}</p>
+</div>
+
+</div>
+
+<div class="add-service-container">
+<a href="/addservice" style="text-decoration:none;">
+<button class="add-btn"><i class="fas fa-plus"></i> Add Service</button>
+</a>
+</div>
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+<tr>
+<th>Service</th>
+<th>Start Date</th>
+<th>End Date</th>
+<th>Status</th>
+<th>Bill</th>
+<th>Pause Details </th>
+<th>Actions</th>
+<th>Payment status</th>
+
+
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+
+{% if subscriptions and subscriptions|length > 0 %}
+
+{% for sub in subscriptions %}
+
+<tr>
+
+<td>{{ sub["service_name"] }}</td>
+
+<td>{{ sub["start_date"] }}</td>
+
+<td>{{ sub["end_date"] }}</td>
+
+<td>
+
+{% if sub["status"]|lower == 'active' %}
+<span class="status-pill active">Active</span>
+{% else %}
+<span class="status-pill paused">Paused</span>
+{% endif %}
+
+</td>
+
+<td>
+<a href="{{ url_for('generate_bill', id=sub.subscription_id) }}" class="btn-bill">
+    🧾 Generate Bill
+</a>
+</td>
+
+<td>
+<a href="/pause_details/{{ sub.subscription_id }}" class="btn-icon">
+<i class="fas fa-circle-info"></i> Details
+</a>
+</td>
+
+
+
+
+
+<td>
+
+<div class="action-group">
+
+{% if sub["status"]|lower == 'active' %}
+
+<a href="/toggle/Pause/{{ sub.subscription_id}}" class="btn-icon">
+<i class="fas fa-pause"></i> Pause
+</a>
+
+{% else %}
+
+<a href="/toggle/Resume/{{ sub.subscription_id }}" class="btn-icon">
+<i class="fas fa-play"></i> Resume
+</a>
+
+{% endif %}
+
+<a href="/delete/{{ sub.subscription_id }}" class="btn-icon"
+onclick="return confirm('Delete this subscription?')">
+<i class="fas fa-trash"></i> Delete
+</a>
+
+</div>
+
+</td>
+<td>
+    {% if sub["bill_status"] == "Paid" %}
+        <a href="/toggle/paid/{{ sub.subscription_id }}" class="btn-icon paid">
+            <i class="fas fa-check"></i> Paid
+        </a>
+    {% elif sub["bill_status"]=="Unpaid" or sub["bill_status"]=="unpaid"%}
+        <a href="/toggle/unpaid/{{ sub.subscription_id }}" class="btn-icon unpaid">
+            <i class="fas fa-times"></i> Unpaid
+        </a>
+    {% else %}
+        <a href="/toggle/not_present/{{ sub.subscription_id }}" class="btn-icon unpaid">
+            <i class="fas fa-times"></i> No bill
+        </a>
+
+    
+    {% endif %}
+</td>
+
+</tr>
+
+{% endfor %}
+
+{% else %}
+
+<tr>
+<td colspan="6" class="no-data">
+<i class="fas fa-box-open" style="font-size:2rem;"></i><br>
+No subscriptions found. Click “Add Service” to get started.
+</td>
+</tr>
+
+{% endif %}
+
+</tbody>
+
+</table>
+
+<div class="table-footer-hint">
+<span>{{ subscriptions|length }} service(s) listed</span>
+<span>upcoming bills soon</span>
+</div>
+
+</div>
+
+</div>
+<a href="/login" class="back-btn">⬅ Back</a>
+</body>
+</html>

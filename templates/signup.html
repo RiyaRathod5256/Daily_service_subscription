@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sign Up | TrackMySubs</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    *{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+/* BACKGROUND */
+
+body{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+
+background:linear-gradient(135deg,#0f4c81,#4da3ff);
+}
+
+/* CARD */
+
+.signup-container{
+background:white;
+padding:45px 40px;
+width:380px;
+
+border-radius:18px;
+
+box-shadow:0 25px 60px rgba(0,0,0,0.25);
+
+animation:fadeIn 0.5s ease;
+}
+
+/* TITLE */
+
+.signup-container h2{
+text-align:center;
+margin-bottom:25px;
+font-weight:600;
+color:#1e293b;
+}
+
+/* INPUT GROUP */
+
+.input-group{
+margin-bottom:18px;
+}
+
+.input-group label{
+font-size:14px;
+font-weight:500;
+color:#334155;
+display:block;
+margin-bottom:6px;
+}
+
+/* INPUTS */
+
+.input-group input{
+width:100%;
+padding:12px;
+
+border-radius:10px;
+border:1px solid #cbd5e1;
+
+font-size:14px;
+
+transition:0.3s;
+}
+
+.input-group input:focus{
+outline:none;
+
+border-color:#3B82F6;
+
+box-shadow:0 0 0 3px rgba(59,130,246,0.15);
+}
+
+/* BUTTON */
+
+.signup-btn{
+width:100%;
+padding:12px;
+
+border:none;
+border-radius:10px;
+
+background:linear-gradient(135deg,#3B82F6,#2563EB);
+
+color:white;
+font-size:15px;
+font-weight:500;
+
+cursor:pointer;
+margin-top:10px;
+
+transition:all 0.3s ease;
+}
+
+.signup-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* LOGIN LINK */
+
+.login-link{
+text-align:center;
+margin-top:18px;
+font-size:14px;
+color:#64748b;
+}
+
+.login-link a{
+color:#2563eb;
+font-weight:500;
+text-decoration:none;
+}
+
+.login-link a:hover{
+text-decoration:underline;
+}
+
+/* FLASH MESSAGE */
+
+.flash-message{
+padding:12px;
+margin-bottom:15px;
+border-radius:8px;
+font-size:14px;
+text-align:center;
+font-weight:500;
+animation:fadeIn 0.4s ease;
+}
+
+.flash-message.success{
+background:#dcfce7;
+color:#166534;
+border:1px solid #86efac;
+}
+
+.flash-message.error{
+background:#fee2e2;
+color:#991b1b;
+border:1px solid #fca5a5;
+}
+
+.flash-message.empty{
+background:#fef3c7;
+color:#92400e;
+border:1px solid #fcd34d;
+}
+
+/* ANIMATION */
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(15px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* MOBILE */
+
+@media(max-width:500px){
+
+.signup-container{
+width:90%;
+padding:30px;
+}
+
+}
+.back-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+
+    padding: 12px 18px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+}
+
+
+</style>
+
+</head>
+
+<body>
+<a href="/" class="back-btn">⬅ Back</a>
+
+<div class="signup-container">
+
+<h2>Create Account</h2>
+
+{% with messages=get_flashed_messages()%}
+{% if messages %}
+{% for message in messages %}
+<div class="flash-message {{category}}">
+{{message}}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<form action="/register" method="POST">
+
+<div class="input-group">
+<label>Username</label>
+<input 
+type="text" 
+name="username"
+placeholder="Enter your username"
+required
+minlength="3"
+maxlength="20">
+</div>
+
+<div class="input-group">
+<label>Email</label>
+<input 
+type="email"
+name="email"
+placeholder="Enter your email"
+required>
+</div>
+
+<div class="input-group">
+<label>Password</label>
+<input 
+type="password"
+name="password"
+placeholder="Enter password"
+required
+minlength="6">
+</div>
+
+<div class="input-group">
+<label>Phone Number</label>
+<input 
+type="tel"
+name="phone"
+placeholder="Enter 10 digit phone number"
+required
+pattern="[0-9]{10}"
+maxlength="10"
+inputmode="numeric">
+</div>
+
+<button class="signup-btn">Register</button>
+
+</form>
+
+<div class="login-link">
+Already registered? <a href="/login">Login</a>
+</div>
+
+</div>
+
+</body>
+</html>
+

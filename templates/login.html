@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Login | TrackMySubs</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* RESET */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+/* BACKGROUND */
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#cad2d8,#dce2e8);
+}
+
+/* MAIN WRAPPER */
+
+.login-wrapper{
+display:flex;
+width:900px;
+height:500px;
+
+background:white;
+border-radius:20px;
+overflow:hidden;
+
+box-shadow:0 30px 60px rgba(0,0,0,0.25);
+}
+
+/* FORM CONTAINER */
+
+.form-container{
+flex:1;
+padding:50px 45px;
+}
+
+/* TITLE */
+
+.form-container h2{
+text-align:center;
+margin-bottom:25px;
+color:#1e293b;
+font-weight:600;
+}
+
+/* FORM GROUP */
+
+.form-group{
+margin-bottom:18px;
+}
+
+.form-group label{
+font-size:14px;
+font-weight:500;
+color:#334155;
+display:block;
+margin-bottom:6px;
+}
+
+/* INPUTS */
+
+.form-group input{
+width:100%;
+padding:12px;
+border:1px solid #cbd5e1;
+border-radius:10px;
+font-size:14px;
+transition:0.3s;
+}
+
+/* INPUT FOCUS */
+
+.form-group input:focus{
+outline:none;
+border-color:#3B82F6;
+box-shadow:0 0 0 3px rgba(59,130,246,0.15);
+}
+
+/* BUTTON */
+
+.btn{
+width:100%;
+padding:12px;
+
+background:linear-gradient(135deg,#3B82F6,#2563EB);
+
+border:none;
+border-radius:10px;
+
+color:white;
+font-size:16px;
+font-weight:500;
+
+cursor:pointer;
+margin-top:10px;
+
+transition:all 0.3s ease;
+}
+
+.btn:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 25px rgba(0,0,0,0.25);
+}
+
+/* SIGNUP LINK */
+
+.signup-link{
+text-align:center;
+margin-top:18px;
+font-size:14px;
+color:#64748b;
+}
+
+.signup-link a{
+color:#2563eb;
+text-decoration:none;
+font-weight:500;
+}
+
+.signup-link a:hover{
+text-decoration:underline;
+}
+
+/* FLASH MESSAGE */
+
+.flash-message{
+padding:12px;
+margin-bottom:15px;
+border-radius:8px;
+font-size:14px;
+text-align:center;
+font-weight:500;
+animation:fadeIn 0.4s ease;
+}
+
+.flash-message.success{
+background:#dcfce7;
+color:#166534;
+border:1px solid #86efac;
+}
+
+.flash-message.error{
+background:#fee2e2;
+color:#991b1b;
+border:1px solid #fca5a5;
+}
+
+.flash-message.empty{
+background:#fef3c7;
+color:#92400e;
+border:1px solid #fcd34d;
+}
+
+/* LOGIN IMAGE */
+
+.login-image{
+flex:1;
+overflow:hidden;
+position:relative;
+}
+
+/* IMAGE */
+
+.login-image img{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+}
+
+/* OPTIONAL OVERLAY */
+
+.login-image::after{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(135deg,#3B82F620,#2563EB40);
+}
+
+/* ANIMATION */
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* MOBILE RESPONSIVE */
+
+@media(max-width:900px){
+
+.login-wrapper{
+flex-direction:column;
+width:90%;
+height:auto;
+}
+
+.login-image{
+display:none;
+}
+
+}
+ .back-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+
+    padding: 12px 18px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+}
+
+</style>
+
+</head>
+
+<body>
+<a href="/" class="back-btn">⬅ Back</a>
+
+<div class="login-wrapper">
+
+<div class="form-container">
+ 
+<h2>Login</h2>
+
+{% with messages=get_flashed_messages()%}
+{% if messages %}
+{% for message in messages %}
+<div class="flash-message error">
+{{message}}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<form action="/login" method="POST">
+
+<div class="form-group">
+<label>Email</label>
+<input 
+type="email" 
+name="email" 
+placeholder="Enter your email"
+required>
+</div>
+
+<div class="form-group">
+<label>Password</label>
+<input 
+type="password" 
+name="password" 
+placeholder="Enter your password"
+required
+minlength="6">
+</div>
+
+<button class="btn">Login</button>
+
+</form>
+
+<div class="signup-link">
+Don't have an account? <a href="/register">Register</a>
+</div>
+
+</div>
+
+<div class="login-image">
+<img src="{{ url_for('static', filename='images/login.jpeg') }}" alt="Login Illustration">
+</div>
+
+</div>
+
+ 
+
+</body>
+</html>
