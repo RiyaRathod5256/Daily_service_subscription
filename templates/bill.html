@@ -38,20 +38,6 @@
             color: green;
         }
 
-        .status {
-            padding: 5px 10px;
-            border-radius: 20px;
-            color: white;
-        }
-
-        .paid {
-            background: green;
-        }
-
-        .unpaid {
-            background: red;
-        }
-
         .btn {
             display: block;
             margin-top: 20px;
@@ -73,6 +59,17 @@
         <div class="row">
             <span>Service:</span>
             <span>{{ service_name }}</span>
+        </div>
+
+        <!-- ✅ ONLY ONE PROVIDER BLOCK -->
+        <div class="row">
+            <span>Service Provider:</span>
+            <span>{{ provider_name }}</span>
+        </div>
+
+        <div class="row">
+            <span>Provider Number:</span>
+            <span>{{ provider_number }}</span>
         </div>
 
         <div class="row">
@@ -116,8 +113,6 @@
             <span>Total Amount:</span>
             <span>₹ {{ total_amount }}</span>
         </div>
-
-        
 
         <a href="{{ url_for('dashboard') }}" class="btn">⬅ Back to Dashboard</a>
     </div>

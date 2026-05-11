@@ -219,17 +219,15 @@ padding:30px;
 
 <h2>Create Account</h2>
 
-{% with messages=get_flashed_messages()%}
-{% if messages %}
-{% for message in messages %}
-<div class="flash-message {{category}}">
-{{message}}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for category, message in messages %}
+<div class="flash-message {{ category }}">
+    {{ message }}
 </div>
 {% endfor %}
-{% endif %}
 {% endwith %}
 
-<form action="/register" method="POST">
+<form action="/register" method="POST" novalidate>
 
 <div class="input-group">
 <label>Username</label>
@@ -239,7 +237,8 @@ name="username"
 placeholder="Enter your username"
 required
 minlength="3"
-maxlength="20">
+maxlength="60"
+>
 </div>
 
 <div class="input-group">
@@ -248,7 +247,10 @@ maxlength="20">
 type="email"
 name="email"
 placeholder="Enter your email"
-required>
+required
+minlength="5"
+maxlength="50"
+>
 </div>
 
 <div class="input-group">
@@ -258,7 +260,8 @@ type="password"
 name="password"
 placeholder="Enter password"
 required
-minlength="6">
+minlength="8"
+maxlength="15">
 </div>
 
 <div class="input-group">

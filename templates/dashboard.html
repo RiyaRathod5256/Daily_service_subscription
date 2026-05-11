@@ -455,13 +455,13 @@ flex-direction:column;
 </td>
 
 <td>
-<a href="{{ url_for('generate_bill', id=sub.subscription_id) }}" class="btn-bill">
+<a href="/generate_bill/{{ sub.uuid}}" class="btn-bill">
     🧾 Generate Bill
 </a>
 </td>
 
 <td>
-<a href="/pause_details/{{ sub.subscription_id }}" class="btn-icon">
+<a href="/pause_details/{{ sub.uuid}}" class="btn-icon">
 <i class="fas fa-circle-info"></i> Details
 </a>
 </td>
@@ -474,21 +474,26 @@ flex-direction:column;
 
 <div class="action-group">
 
+<!-- ✏ EDIT BUTTON -->
+<a href="/editservice/{{ sub.uuid }}" class="btn-icon">
+<i class="fas fa-pen"></i> Edit
+</a>
+
 {% if sub["status"]|lower == 'active' %}
 
-<a href="/toggle/Pause/{{ sub.subscription_id}}" class="btn-icon">
+<a href="/toggle/Pause/{{ sub.uuid}}" class="btn-icon">
 <i class="fas fa-pause"></i> Pause
 </a>
 
 {% else %}
 
-<a href="/toggle/Resume/{{ sub.subscription_id }}" class="btn-icon">
+<a href="/toggle/Resume/{{ sub.uuid}}" class="btn-icon">
 <i class="fas fa-play"></i> Resume
 </a>
 
 {% endif %}
 
-<a href="/delete/{{ sub.subscription_id }}" class="btn-icon"
+<a href="/delete/{{ sub.uuid }}" class="btn-icon"
 onclick="return confirm('Delete this subscription?')">
 <i class="fas fa-trash"></i> Delete
 </a>
@@ -498,15 +503,15 @@ onclick="return confirm('Delete this subscription?')">
 </td>
 <td>
     {% if sub["bill_status"] == "Paid" %}
-        <a href="/toggle/paid/{{ sub.subscription_id }}" class="btn-icon paid">
+        <a href="/toggle/paid/{{ sub.uuid}}" class="btn-icon paid">
             <i class="fas fa-check"></i> Paid
         </a>
     {% elif sub["bill_status"]=="Unpaid" or sub["bill_status"]=="unpaid"%}
-        <a href="/toggle/unpaid/{{ sub.subscription_id }}" class="btn-icon unpaid">
+        <a href="/toggle/unpaid/{{ sub.uuid }}" class="btn-icon unpaid">
             <i class="fas fa-times"></i> Unpaid
         </a>
     {% else %}
-        <a href="/toggle/not_present/{{ sub.subscription_id }}" class="btn-icon unpaid">
+        <a href="/toggle/not_present/{{ sub.uuid}}" class="btn-icon unpaid">
             <i class="fas fa-times"></i> No bill
         </a>
 

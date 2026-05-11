@@ -2,115 +2,144 @@
 <html>
 <head>
     <title>Pause Details</title>
-
-    <style>
-        
+<style>
     body {
-        font-family: 'Segoe UI', Arial, sans-serif;
-        background: linear-gradient(to right, #eef2f7, #f8fafc);
-        padding: 20px;
-    }
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    padding: 30px;
+    color: #1e293b;
+}
 
-    .container {
-        max-width: 920px;
-        margin: auto;
-    }
+/* CONTAINER */
+.container {
+    max-width: 920px;
+    margin: auto;
+}
 
-    h2 {
-        color: #174299;
-        margin-bottom: 20px;
-        letter-spacing: 0.5px;
-    }
+/* TITLE */
+h2 {
+    text-align: center;
+    color: white;
+    margin-bottom: 25px;
+    font-size: 28px;
+    letter-spacing: 1px;
+}
 
-    .card {
-        background: white;
-        padding: 22px;
-        margin-bottom: 22px;
-        border-radius: 12px;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-        transition: all 0.25s ease;
-    }
+/* CARD */
+.card {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(15px);
+    padding: 24px;
+    margin-bottom: 25px;
+    border-radius: 18px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    transition: all 0.3s ease;
+}
 
-    .card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 22px rgba(0,0,0,0.12);
-    }
+.card:hover {
+    transform: translateY(-6px);
+}
 
-    .info {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 18px;
-    }
+/* GRID */
+.info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+}
 
-    .label {
-        font-weight: 600;
-        font-size: 13px;
-        color: #0e4086;
-        margin-bottom: 4px;
-    }
+/* LABEL */
+.label {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
 
-    .highlight {
-        color: #e91e63;
-        font-weight: bold;
-        font-size: 16px;
-    }
+/* VALUE TEXT */
+.info div div:last-child {
+    font-size: 17px;
+    font-weight: 600;
+}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 12px;
-        border-radius: 8px;
-        overflow: hidden;
-    }
+/* STATUS */
+.status-active {
+    color: #16a34a;
+    font-weight: bold;
+}
 
-    th {
-        background: linear-gradient(135deg, #16a34a, #15803d);
-        color: white;
-        padding: 12px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-    }
+.status-paused {
+    color: #ef4444;
+    font-weight: bold;
+}
 
-    td {
-        padding: 12px;
-        text-align: center;
-        border-bottom: 1px solid #eee;
-        color: #333;
-    }
+/* HIGHLIGHT */
+.highlight {
+    color: #2563eb;
+    font-weight: bold;
+    font-size: 18px;
+}
 
-    tr:hover {
-        background: #f9fafb;
-        transition: 0.2s;
-    }
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    border-radius: 12px;
+    overflow: hidden;
+}
 
-    .status-active {
-        color: #16a34a;
-        font-weight: bold;
-    }
+/* TABLE HEADER */
+th {
+    background: linear-gradient(135deg, #22c55e, #15803d);
+    color: white;
+    padding: 14px;
+    font-weight: 500;
+    text-align: center;
+}
 
-    .status-paused {
-        color: #dc2626;
-        font-weight: bold;
-    }
+/* TABLE DATA */
+td {
+    padding: 14px;
+    text-align: center;
+    background: rgba(255,255,255,0.9);
+    transition: 0.3s;
+}
 
-    .back-btn {
-        display: inline-block;
-        margin-top: 15px;
-        padding: 10px 18px;
-        background: linear-gradient(135deg, #2563eb, #1d4ed8);
-        color: white;
-        text-decoration: none;
-        border-radius: 8px;
-        font-weight: 500;
-        transition: all 0.25s ease;
-    }
+/* ROW HOVER */
+tr:hover td {
+    background: #e0f2fe;
+}
 
-    .back-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+/* DIVIDER */
+tr {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+/* BACK BUTTON */
+.back-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 22px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+    .info{
+        grid-template-columns: 1fr;
     }
+}
 </style>
-    </style>
 </head>
 
 <body>

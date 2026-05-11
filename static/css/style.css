@@ -23,6 +23,10 @@ to{opacity:1;}
 
 header{
 padding:22px 8%;
+position:sticky;   /* ADD THIS */
+top:0;             /* ADD THIS */
+z-index:1000;      /* ADD THIS */
+background:linear-gradient(135deg,#0f4c81,#4da3ff); /* ADD THIS */
 }
 
 .navbar{
@@ -518,4 +522,81 @@ color:#bfdbfe;
 border-top:1px solid rgba(255,255,255,0.15);
 padding-top:20px;
 font-size:14px;
+}
+
+.hero-image img {
+  max-width: 100%;
+  border-radius: 20px;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.hero-image:hover img {
+  transform: scale(1.05) translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.hero-image {
+  overflow: hidden;
+}
+
+/* SOCIAL ICONS */
+
+.footer-contact p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* icon style */
+.footer-contact i {
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+/* links inside contact */
+.footer-contact a {
+  color: #dbeafe;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.footer-contact a:hover {
+  color: #ffffff;
+}
+
+/* hover animation for icons */
+.footer-contact i:hover {
+  transform: scale(1.2);
+}
+
+/* specific brand colors (optional but looks premium) */
+
+.fa-instagram {
+  color: #E1306C;
+}
+
+.fa-x-twitter {
+  color: #ffffff;
+}
+
+/* better spacing for links */
+.footer-links a {
+  display: block;
+  margin: 6px 0;
+  color: #dbeafe;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.footer-links a:hover {
+  color: #93c5fd;
+  transform: translateX(5px);
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
 }

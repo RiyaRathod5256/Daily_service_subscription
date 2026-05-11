@@ -19,45 +19,74 @@ def register():
         email=request.form['email']
         password=request.form['password']
         phone=request.form['phone']
-
+        email=email.lower()
         # validation
         # empty fields
 
         if not name  or  not email or not password or not phone:
             flash("All fields are required","empty")
             return  redirect(url_for("register"))
+        username_pattern = r'^[a-zA-Z_][a-zA-Z0-9_.@#$%^&*!-]{2,60}$'
+        if not re.match(username_pattern, name):
+            flash("Username must start with a letter or _ and can contain letter, number, and underscore,special character (3-60 characters) ,space is not allowed", "error")
+            return redirect(url_for("register"))
         
         if len(name)<3:
             flash("Username is too short","error")
             return redirect(url_for("register"))
+        if len(name)>60:
+            flash("Username is too long must be less tahn 60 characters")
+            return redirect(url_for("register"))
+        
+        if re.search(r'(.)\1{4,}', name):
+            flash("Username cannot have too many repeated characters", "error")
+            return redirect(url_for("register"))
         
         if not phone.isdigit() or len(phone) != 10:
-            flash("Invalid phone number","error")
+            flash("Invalid phone number number must be of 10 digits and start with 6,7,8,9","error")
             return redirect(url_for("register"))
         
-        email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        email_pattern = r'^[A-Za-z][A-Za-z0-9._%+-]*@[A-Za-z0-9]+([.-][A-Za-z0-9]+)*\.[A-Za-z]{2,}$'
+        if not re.fullmatch(email_pattern, email):
+            flash("invalid email format ","error")
+            return redirect(url_for("register"))
+        
+        if len(email)>70:
+            flash("invalid email length must be less than 70 characters")
+        
+        if len(password)<8 or len(password)>15:
+            flash("password must be of 8 to 15 characters","error")
+            return redirect(url_for("register"))
+        
+        phone_pattern = r'^(?!.*(\d)(?:.*\1){5})[6-9]\d{9}$'
 
-        if not re.match(email_pattern,email):
-            flash("invalid email format","error")
+        if not re.match(phone_pattern, phone):
+            flash("Enter a valid 10-digit phone number and must start with 6,7,8,9 and number not repeat more than 5 ", "error")
             return redirect(url_for("register"))
-        
-        if len(password)<10 or len(password)>15:
-            flash("password must be of 10 characters","error")
-            return redirect(url_for("register"))
-        
         # email dupliacte
         cur=mysql.connection.cursor()
 
         cur.execute("select * from user1 where useremail=%s",(email,))
 
         user= cur.fetchone()
-
+        
         if user:
+            cur.close()
             flash("user already registered","error")
-            return redirect(url_for("login"))
+            return redirect(url_for("register"))
         
+        cur.execute("select * from user1 where userphonenumber=%s",(phone,))
+        phone=cur.fetchone()
 
-        
+        if phone:
+            cur.close()
+            flash("phone number already registered","error")
+            return redirect(url_for("register"))
+
+        password_pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+        if not re.match(password_pattern, password):
+            flash("Password must be at least 8 characters and atmost 15 character long and include uppercase, lowercase, number, and special character." , "error")
+            return redirect(url_for("register"))
 
         hash_password=generate_password_hash(password)
 
@@ -83,6 +112,12 @@ def login():
     if(request.method=="POST"):
         email=request.form["email"]
         password=request.form["password"]
+        
+        email_pattern=r'^[A-Za-z][A-Za-z0-9._%+-]*@[A-Za-z0-9]+([.-][A-Za-z0-9]+)*\.[A-Za-z]{2,}$'
+        if not re.match(email_pattern, email):
+            print("login")
+            flash("Enter a valid Gmail (start with letter or underscore)", "error")
+            return redirect(url_for("login"))
 
         cur=mysql.connection.cursor()
 
@@ -131,11 +166,11 @@ def dashboard():
     cur=mysql.connection.cursor()
     cur.execute("""
     SELECT 
-        subscriptions.subscription_id,
         service.service_id,
         subscriptions.start_date,
         subscriptions.end_date,
         subscriptions.status,
+        BIN_TO_UUID(subscriptions.uuid_id) AS uuid,
         subscriptions.user1_id,
         service.service_name,
         Billing.bill_status
@@ -143,7 +178,7 @@ def dashboard():
     JOIN service 
         ON subscriptions.service_id = service.service_id
     LEFT JOIN Billing 
-        ON subscriptions.subscription_id = Billing.subscription_id
+        ON subscriptions.uuid_id = Billing.subscription_id
     WHERE subscriptions.user1_id = %s
 """, (session["user_id"],))
     subscriptions_list=cur.fetchall()
@@ -202,19 +237,21 @@ def addservice():
             flash("All fields are required","error")
             return redirect(url_for("addservice"))
         #regex
-        service_name_pattern = r"^[A-Za-z ]{3,}$"
-        provider_pattern = r"^[A-Za-z ]+$"
-        phone_pattern = r"^[6-9]\d{9}$"
+        service_name_pattern = r"^[A-Za-z]+( [A-Za-z]+)*$"
+        provider_pattern ="^(?!.*(.)\1{3,})[A-Za-z]+( [A-Za-z]+)*$"
+        phone_pattern = r'^(?!.*(\d)(?:.*\1){5})[6-9]\d{9}$'
         address_pattern = r"^[A-Za-z0-9\s,.-]{5,}$"
         price_pattern = r"^\d+(\.\d{1,2})?$"
-        quantity_pattern = r"^[1-9]\d*$"
+        quantity_pattern = r"^[1-9]\d"
+        
+        
 
         if not re.match(service_name_pattern,service_name):
-            flash("invalid name format","error")
+            flash("Invalid Service Name ,Only alphabets with single space between words allowed","error")
             return redirect(url_for("addservice"))
         
         if not re.match(provider_pattern,service_provider):
-            flash("invalid provider name","error")
+            flash("invalid provider name Only alphabets, single space between words, max 3 repeated letters allowed","error")
             return redirect(url_for("addservice"))
         
         if not re.match(phone_pattern,service_provider_number):
@@ -225,14 +262,21 @@ def addservice():
             flash("invalid address pattern")
             return redirect(url_for("addservice"))
         
-        if not re.match(price_pattern,price_per_day):
+        
+
+        price_per_day = price_per_day.strip()
+        print(repr(price_per_day))  # debug
+
+        if not re.fullmatch(price_pattern, price_per_day):
             flash("invalid price pattern")
             return redirect(url_for("addservice"))
-        
-        if not re.match(quantity_pattern,daily_quantity):
-            flash("invalid price pattern")
-            return redirect(url_for("addservice"))
-        
+                
+        daily_quantity = daily_quantity.strip()
+
+        if not re.fullmatch(r"^[1-9]\d*$", daily_quantity):
+            flash("invalid quantity pattern")
+            return redirect(url_for("addservice")) 
+                
         start_date_obj = datetime.strptime(start_date, "%Y-%m-%d").date()
         end_date_obj = datetime.strptime(end_date, "%Y-%m-%d").date()
 
@@ -276,10 +320,13 @@ def addservice():
             flash("subscription already exist","error")
             return redirect (url_for("addservice"))
         
+
+        
         cur.execute("insert into subscriptions(user1_id,service_id,service_provider_id,start_date,end_date,daily_quantity) values(%s,%s,%s,%s,%s,%s)",(user_id,service["service_id"],service_provider_details["service_provider_id"],start_date,end_date,daily_quantity))
         flash("subscription added successfully","success")
+        print("Insert executed")
         
-        cur.execute("""select subscriptions.subscription_id,
+        cur.execute("""select subscriptions.uuid_id,
                     service.service_id,subscriptions.start_date,subscriptions.end_date,subscriptions.status,subscriptions.user1_id,service.service_name FROM subscriptions JOIN  service on subscriptions.service_id=service.service_id where subscriptions.user1_id=%s""",(session["user_id"],))
         
        
@@ -296,17 +343,17 @@ def addservice():
 
 
 #pause service logic
-@app.route("/toggle/Pause/<int:id>")
+@app.route("/toggle/Pause/<id>")
 def pause_service(id):
     cur=mysql.connection.cursor()
 
     #update status in database 
     cur.execute("""update subscriptions
                 set status="paused"
-                where subscription_id=%s""",(id,))
+                where uuid_id=UUID_TO_BIN(%s)""",(id,))
     flash("service paused succesfully")
     
-    cur.execute("insert into pause_history(pause_start_date,subscription_id) values(CURDATE(),%s)",(id,))
+    cur.execute("insert into pause_history(pause_start_date,subscription_id) values(CURDATE(),UUID_TO_BIN(%s))",(id,))
     
     mysql.connection.commit()
     cur.close()
@@ -316,14 +363,14 @@ def pause_service(id):
 
 
 #resume service logic
-@app.route("/toggle/Resume/<int:id>")
+@app.route("/toggle/Resume/<id>")
 def resume(id):
     cur=mysql.connection.cursor()
 
     #resume status in database 
     cur.execute("""update subscriptions
                 set status="active"
-                where subscription_id=%s""",(id,))
+                where uuid_id=UUID_TO_BIN(%s)""",(id,))
     flash("service resumed succesfully")
     
 
@@ -331,7 +378,7 @@ def resume(id):
     UPDATE pause_history 
     SET pause_end_date = CURDATE(),
         pause_days = GREATEST(DATEDIFF(CURDATE(), pause_start_date), 0)
-    WHERE subscription_id = %s
+    WHERE subscription_id =UUID_TO_BIN(%s)
     AND pause_end_date IS NULL
 """, (id,))
                 
@@ -343,19 +390,20 @@ def resume(id):
     cur.close()
     return redirect(url_for("dashboard"))
 
-@app.route("/delete/<int:id>")
+@app.route("/delete/<id>")
 def delete_service(id):
     cur=mysql.connection.cursor()
-    cur.execute("select service_id,service_provider_id from subscriptions where subscription_id=%s",(id,))
+    cur.execute("select service_id,service_provider_id from subscriptions where uuid_id= UUID_TO_BIN(%s)",(id,))
     service_details=cur.fetchone()
     print(service_details)
     mysql.connection.cursor()
     cur.close()
  
     cur=mysql.connection.cursor()
-    cur.execute("delete from billing where subscription_id=%s",(id,))
-    cur.execute("delete from pause_history where subscription_id=%s",(id,))     
-    cur.execute(" delete from subscriptions where subscription_id=%s",(id,))
+    cur.execute("delete from billing where subscription_id=UUID_TO_BIN(%s)",(id,))
+    cur.execute("delete from pause_history where subscription_id=UUID_TO_BIN(%s)",(id,))     
+    cur.execute(" delete from subscriptions where uuid_id=UUID_TO_BIN(%s)",(id,))
+    
     flash("delete subscription successfully")
     mysql.connection.commit()
     cur.close()
@@ -371,6 +419,8 @@ def delete_service(id):
         cur.execute("delete from service_provider where service_id=%s",(service_details["service_id"],))
         cur.execute("delete from service where service_id=%s",(service_details["service_id"],))
         
+    
+
 
 
     mysql.connection.commit()
@@ -379,19 +429,20 @@ def delete_service(id):
 
 #pause_details _page
 
-@app.route('/pause_details/<int:id>')
+@app.route('/pause_details/<id>')
 def pause_details(id):
     cur = mysql.connection.cursor()
 
     #Get subscription
     cur.execute("""SELECT 
                    service.service_name,
+                   subscriptions.uuid_id,
                    subscriptions.start_date,
                    subscriptions.end_date ,
                    subscriptions.status
                    From Subscriptions JOIN SERVICE
                     on Subscriptions.service_id=SERVICE.service_id
-                where subscriptions.subscription_id=%s""",(id,))
+                where subscriptions.uuid_id=UUID_TO_BIN(%s)""",(id,))
     subs= cur.fetchone()
     
     print(subs)
@@ -400,7 +451,7 @@ def pause_details(id):
     cur.execute("""
         SELECT pause_start_date, pause_end_date, pause_days
         FROM pause_history
-        WHERE subscription_id=%s
+        WHERE subscription_id=UUID_TO_BIN(%s)
     """, (id,))
     pauses = cur.fetchall()
     print(pauses)
@@ -451,18 +502,21 @@ def pause_details(id):
     )
 
 
-@app.route("/bill/<int:id>")
+@app.route('/generate_bill/<id>')
 def generate_bill(id):
     cur = mysql.connection.cursor()
 
     # subscription + price
     cur.execute("""
-        SELECT s.start_date, s.end_date, s.daily_quantity, s.user1_id,
-               srv.price_per_day,srv.service_name
-        FROM subscriptions s
-        JOIN service srv ON s.service_id = srv.service_id
-        WHERE s.subscription_id = %s
-    """, (id,))
+    SELECT s.start_date, s.end_date, s.daily_quantity, s.user1_id,
+           srv.price_per_day, srv.service_name,
+           sp.service_provider_name,
+           sp.service_provider_number
+    FROM subscriptions s
+    JOIN service srv ON s.service_id = srv.service_id
+    JOIN service_provider sp ON s.service_provider_id = sp.service_provider_id
+    WHERE s.uuid_id = UUID_TO_BIN(%s)
+""", (id,))
     
     sub = cur.fetchone()
 
@@ -479,7 +533,7 @@ def generate_bill(id):
 
     
         
-    cur.execute("SELECT * FROM billing WHERE subscription_id=%s", (id,))
+    cur.execute("SELECT * FROM billing WHERE subscription_id=UUID_TO_BIN(%s)", (id,))
     existing_bill = cur.fetchone()
     #  Calculate pause days
     cur.execute("""
@@ -507,12 +561,12 @@ def generate_bill(id):
         cur.execute("""
         UPDATE billing
         SET total_amount=%s, bill_date=CURDATE()
-        WHERE subscription_id=%s
+        WHERE subscription_id=UUID_TO_BIN(%s)
     """, (total_amount, id))
     else:
          cur.execute("""
         INSERT INTO billing (subscription_id, total_amount, created_at, user1_id, bill_date, bill_status)
-        VALUES (%s, %s, NOW(), %s, CURDATE(), %s)
+        VALUES (UUID_TO_BIN(%s), %s, NOW(), %s, CURDATE(), %s)
     """, (id, total_amount, sub["user1_id"], "unpaid"))
 
 
@@ -526,6 +580,8 @@ def generate_bill(id):
     return render_template(
     "bill.html",
     service_name=sub["service_name"],
+    provider_name=sub["service_provider_name"],   # added
+    provider_number=sub["service_provider_number"], #
     start_date=sub["start_date"],
     end_date=sub["end_date"],
     total_days=total_days,
@@ -538,11 +594,11 @@ def generate_bill(id):
 )
 
 #payment status
-@app.route("/toggle/paid/<int:id>")
+@app.route("/toggle/paid/<id>")
 def to_paid(id):
     cur=mysql.connection.cursor()
 
-    cur.execute("SELECT * FROM billing WHERE subscription_id=%s", (id,))
+    cur.execute("SELECT * FROM billing WHERE subscription_id=UUID_TO_BIN(%s)", (id,))
     bill = cur.fetchone()
 
     if not bill:
@@ -550,26 +606,26 @@ def to_paid(id):
         return redirect(url_for("dashboard"))
 
     #update status to paid 
-    cur.execute("Update Billing set bill_status='unpaid' where subscription_id=%s",(id,))
+    cur.execute("Update Billing set bill_status='unpaid' where subscription_id=UUID_TO_BIN(%s)",(id,))
     mysql.connection.commit()
     cur.close()
     
     return redirect(url_for("dashboard"))
     
 
-@app.route("/toggle/unpaid/<int:id>")
+@app.route("/toggle/unpaid/<id>")
 def to_unpaid(id):
     cur=mysql.connection.cursor()
     #update status to paid 
 
-    cur.execute("SELECT * FROM billing WHERE subscription_id=%s", (id,))
+    cur.execute("SELECT * FROM billing WHERE subscription_id=UUID_TO_BIN(%s)", (id,))
     bill = cur.fetchone()
 
     if not bill:
         flash("Generate bill first!", "error")
         return redirect(url_for("dashboard"))
 
-    cur.execute("Update Billing set bill_status='Paid' where subscription_id=%s",(id,))
+    cur.execute("Update Billing set bill_status='Paid' where subscription_id=UUID_TO_BIN(%s)",(id,))
     flash("paid bill")
     mysql.connection.commit()
     cur.close()
@@ -578,14 +634,136 @@ def to_unpaid(id):
 
 
 
-@app.route("/toggle/not_present/<int:id>")
+@app.route("/toggle/not_present/<id>")
 def no_bill(id):
     flash("No bill is generated ")
     return redirect(url_for("dashboard"))
 
 
     
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route("/editservice/<id>", methods=["GET", "POST"])
+def edit_service(id):
+    cur = mysql.connection.cursor()
+
     
+    cur.execute("""
+        SELECT s.start_date, s.end_date, s.daily_quantity,
+               sp.service_provider_name, sp.service_provider_number, sp.service_provider_address,
+               srv.service_name, srv.price_per_day
+        FROM subscriptions s
+        JOIN service srv ON s.service_id = srv.service_id
+        JOIN service_provider sp ON s.service_provider_id = sp.service_provider_id
+        WHERE s.uuid_id = UUID_TO_BIN(%s)
+    """, (id,))
+    
+    service = cur.fetchone()
+    print(service)
+
+    
+    if request.method == "POST":
+        service_name=request.form["service_name"]
+        service_provider=request.form["provider"]
+        service_provider_number=request.form["number"]
+        service_provider_address=request.form["address"]
+        price_per_day=request.form["price"]
+        daily_quantity=request.form["quantity"]
+        start_date=request.form["start"]
+        end_date=request.form["end"]
+        #empty
+        if not service_name or not service_provider  or not service_provider_number or not service_provider_address or not price_per_day or not daily_quantity or not start_date or not end_date:
+            flash("All fields are required","error")
+            return redirect(url_for("addservice"))
+
+        if not service_name or not service_provider  or not service_provider_number or not service_provider_address or not price_per_day or not daily_quantity or not start_date or not end_date:
+            flash("All fields are required","error")
+            return redirect(url_for("addservice"))
+        #regex
+        service_name_pattern = r"^[A-Za-z ]{3,}$"
+        provider_pattern = r"^[A-Za-z ]+$"
+        phone_pattern = r'^(?!.*(\d)(?:.*\1){5})[6-9]\d{9}$'
+        address_pattern = r"^[A-Za-z0-9\s,.-]{5,}$"
+        price_pattern = r"^\d+(\.\d{1,2})?$"
+        quantity_pattern = r"^[1-9]\d"
+        
+        
+
+        if not re.match(service_name_pattern,service_name):
+            flash("invalid name format","error")
+            return redirect(url_for("addservice"))
+        
+        if not re.match(provider_pattern,service_provider):
+            flash("invalid provider name","error")
+            return redirect(url_for("addservice"))
+        
+        if not re.match(phone_pattern,service_provider_number):
+            flash("invalid phone number format")
+            return redirect(url_for("addservice"))
+        
+        if not re.match(address_pattern,service_provider_address):
+            flash("invalid address pattern")
+            return redirect(url_for("addservice"))
+        
+        
+
+        price_per_day = price_per_day.strip()
+        print(repr(price_per_day))  # debug
+
+        if not re.fullmatch(price_pattern, price_per_day):
+            flash("invalid price pattern")
+            return redirect(url_for("addservice"))
+                
+        daily_quantity = daily_quantity.strip()
+
+        if not re.fullmatch(r"^[1-9]\d*$", daily_quantity):
+            flash("invalid quantity pattern")
+            return redirect(url_for("addservice")) 
+                
+        start_date_obj = datetime.strptime(start_date, "%Y-%m-%d").date()
+        end_date_obj = datetime.strptime(end_date, "%Y-%m-%d").date()
+
+        if start_date_obj > end_date_obj:
+            flash("Start date cannot be greater than end date", "error")
+            return redirect(url_for("addservice"))
+        
+        
+        cur.execute("""
+            UPDATE service 
+            SET service_name=%s, price_per_day=%s
+            WHERE service_id = (
+                SELECT service_id FROM subscriptions WHERE uuid_id=UUID_TO_BIN(%s)
+            )
+        """, (service_name, price_per_day, id))
+
+        
+        cur.execute("""
+            UPDATE service_provider 
+            SET service_provider_name=%s,
+                service_provider_number=%s,
+                service_provider_address=%s
+            WHERE service_provider_id = (
+                SELECT service_provider_id FROM subscriptions WHERE uuid_id=UUID_TO_BIN(%s)
+            )
+        """, (service_provider, service_provider_number, service_provider_address, id))
+
+       
+        cur.execute("""
+            UPDATE subscriptions
+            SET start_date=%s, end_date=%s, daily_quantity=%s
+            WHERE uuid_id=UUID_TO_BIN(%s)
+        """, (start_date, end_date, daily_quantity, id))
+
+        mysql.connection.commit()
+        cur.close()
+
+        flash("Service updated successfully!", "success")
+        return redirect(url_for("dashboard"))
+
+    cur.close()
+    return render_template("edit_service.html", service=service)
 
     
     
@@ -596,5 +774,6 @@ def no_bill(id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8000,debug=True)
 
+   

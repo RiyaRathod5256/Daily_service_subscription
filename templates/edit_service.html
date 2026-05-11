@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Edit Service</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+/* (Same CSS — unchanged) */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#0f4c81,#4da3ff);
+padding:30px;
+}
+
+.container{
+width:720px;
+max-width:95%;
+background:rgba(231, 213, 227, 0.944);
+backdrop-filter:blur(10px);
+padding:40px;
+border-radius:18px;
+box-shadow:0 25px 60px rgba(0,0,0,0.25);
+border:1px solid rgba(255,255,255,0.25);
+}
+
+.header{
+text-align:center;
+margin-bottom:30px;
+}
+
+.header h2{
+font-size:28px;
+color:#1e293b;
+}
+
+#serviceForm{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+.submit-btn{
+grid-column:span 2;
+}
+
+.form-group{
+display:flex;
+flex-direction:column;
+}
+
+label{
+margin-bottom:6px;
+font-size:14px;
+color:#1f2937;
+}
+
+input{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:1px solid rgba(0,0,0,0.15);
+font-size:14px;
+background:white;
+}
+
+.submit-btn{
+width:100%;
+padding:15px;
+margin-top:10px;
+border:none;
+border-radius:12px;
+background:linear-gradient(135deg,#3b82f6,#2563eb);
+color:white;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+}
+
+.back-btn {
+position: fixed;
+bottom: 20px;
+left: 20px;
+padding: 12px 18px;
+background: linear-gradient(135deg, #2563eb, #1d4ed8);
+color: white;
+text-decoration: none;
+border-radius: 8px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+<h2>Edit Service</h2>
+</div>
+
+<form id="serviceForm" method="POST">
+
+
+<div class="form-group">
+<label>Service Name</label>
+<input type="text" name="service_name"
+value="{{ service.service_name }}" required minlength="2" maxlength="20">
+</div>
+
+<div class="form-group">
+<label>Service Provider</label>
+<input type="text" name="provider"
+value="{{ service.service_provider_name }}" required minlength="2" maxlength="20">
+</div>
+
+<div class="form-group">
+<label>Provider Number</label>
+<input type="tel" name="number"
+value="{{ service.service_provider_number }}" required pattern="[0-9]{10}" minlength="10" maxlength="10">
+</div>
+
+<div class="form-group">
+<label>Provider Address</label>
+<input type="text" name="address"
+value="{{ service.service_provider_address }}" required minlength="2" maxlength="70">
+</div>
+
+<div class="form-group">
+<label>Price per Day</label>
+<input type="number" name="price"
+value="{{ service.price_per_day }}" required min="1" step="0.01" min="2" max="10000">
+</div>
+
+<div class="form-group">
+<label>Daily Quantity</label>
+<input type="number" name="quantity"
+value="{{ service.daily_quantity }}" required min="1" max="100" >
+</div>
+
+<div class="form-group">
+<label>Start Date</label>
+<input type="date" id="start" name="start"
+value="{{ service.start_date }}" required>
+</div>
+
+<div class="form-group">
+<label>End Date</label>
+<input type="date" id="end" name="end"
+value="{{ service.end_date }}" required>
+</div>
+
+<button class="submit-btn">Update Service</button>
+
+</form>
+
+</div>
+
+<a href="/dashboard" class="back-btn">⬅ Back</a>
+
+
+
+<script>
+const startInput = document.getElementById("start");
+const endInput = document.getElementById("end");
+
+const today = new Date();
+
+const pastDate = new Date();
+pastDate.setFullYear(today.getFullYear() - 100);
+
+const futureDate = new Date();
+futureDate.setFullYear(today.getFullYear() + 100);
+
+function formatDate(date) {
+    return date.toISOString().split("T")[0];
+}
+
+// limits
+startInput.min = formatDate(pastDate);
+startInput.max = formatDate(futureDate);
+
+endInput.min = startInput.value;
+endInput.max = formatDate(futureDate);
+
+// dynamic restriction
+startInput.addEventListener("change", function () {
+    endInput.min = this.value;
+
+    if (endInput.value < this.value) {
+        endInput.value = "";
+    }
+});
+
+// validation
+document.getElementById("serviceForm").addEventListener("submit", function (e) {
+    const start = new Date(startInput.value);
+    const end = new Date(endInput.value);
+
+    if (end < start) {
+        alert("End date must be greater than or equal to Start date");
+        e.preventDefault();
+    }
+});
+</script>
+
+</body>
+</html>
