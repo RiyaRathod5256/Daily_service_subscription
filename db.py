@@ -1,24 +1,19 @@
-import pymysql
-pymysql.install_as_MySQLdb()
 
+
+import os
 from flask_mysqldb import MySQL
 
-from flask_mysqldb import MySQL
-
-
-mysql=MySQL()  
-# create object of MYSQL Class i.e mysql
+mysql = MySQL()
 
 def init_db(app):
-    app.config['MYSQL_HOST']='localhost'
-    app.config['MYSQL_USER']='root'
-    app.config['MYSQL_PASSWORD']='Riya@1234'
-    app.config['MYSQL_DB']='subscription_mangement'
+
+    app.config['MYSQL_HOST'] = os.getenv('MYSQLHOST', 'localhost')
+    app.config['MYSQL_USER'] = os.getenv('MYSQLUSER', 'root')
+    app.config['MYSQL_PASSWORD'] = os.getenv('MYSQLPASSWORD', 'Riya@1234')
+    app.config['MYSQL_DB'] = os.getenv('MYSQLDATABASE', 'subscription_mangement')
+    app.config['MYSQL_PORT'] = int(os.getenv('MYSQLPORT', 3306))
     app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
     mysql.init_app(app)
-    # init_app is like pluggin the usb device into the computer 
-    
-
     
 
 
