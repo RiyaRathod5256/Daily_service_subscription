@@ -1,12 +1,12 @@
 from flask import Flask, render_template,request,flash,redirect,url_for,session
-from db import mysql,init_db
+from db import get_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 from datetime import timedelta,datetime
 
 app = Flask(__name__)
 app.secret_key = "123456"
-init_db(app)
+
 
 @app.route("/")
 def home():
@@ -64,7 +64,8 @@ def register():
             flash("Enter a valid 10-digit phone number and must start with 6,7,8,9 and number not repeat more than 5 ", "error")
             return redirect(url_for("register"))
         # email dupliacte
-        cur=mysql.connection.cursor()
+        conn = get_connection()
+        cur = conn.cursor()
 
         cur.execute("select * from user1 where useremail=%s",(email,))
 
@@ -96,8 +97,8 @@ def register():
         print(password)
         print(phone)
         
-        mysql.connection.commit()
-        cur.close()
+        conn.commit()
+        conn.close()
 
         flash("Registration successfull","success")
         return redirect(url_for ("login"))
@@ -119,7 +120,8 @@ def login():
             flash("Enter a valid Gmail (start with letter or underscore)", "error")
             return redirect(url_for("login"))
 
-        cur=mysql.connection.cursor()
+        conn = get_connection()
+        cur = conn.cursor()
 
         cur.execute("select useremail from user1 where useremail=%s",(email,))
         user_email= cur.fetchone()
@@ -127,7 +129,8 @@ def login():
         
 
         if user_email:
-            cur=mysql.connection.cursor()
+            conn = get_connection()
+            cur = conn.cursor()
             cur.execute("select userpassword from user1 where useremail=%s",(email,))
             stored_password=cur.fetchone()
             
@@ -136,8 +139,8 @@ def login():
                 cur.execute("select user1_id,useremail,username from user1 where useremail=%s",(email,))
                 user_details=cur.fetchone()
                 print(user_details)
-                mysql.connection.commit()
-                cur.close()
+                conn.commit()
+                conn.close()
                 session["user_id"]=user_details["user1_id"]
                 session["user_email"]=user_details["useremail"]
                 session["user_name"]=user_details["username"]
@@ -163,7 +166,8 @@ def dashboard():
     if "loggedin" not in session:
         return redirect(url_for("login"))
 
-    cur=mysql.connection.cursor()
+    conn = get_connection()
+    cur = conn.cursor()
     cur.execute("""
     SELECT 
         service.service_id,
@@ -284,7 +288,8 @@ def addservice():
             flash("Start date cannot be greater than end date", "error")
             return redirect(url_for("addservice"))
         
-        cur=mysql.connection.cursor()
+        conn = get_connection()
+        cur = conn.cursor()
         user_id=session["user_id"]
 
         #existing service
@@ -333,8 +338,8 @@ def addservice():
         subscriptions_list=cur.fetchall()
 
         print(subscriptions_list)
-        mysql.connection.commit()
-        cur.close()
+        conn.commit()
+        conn.close()
         return redirect(url_for("dashboard"))
        
 
@@ -345,7 +350,8 @@ def addservice():
 #pause service logic
 @app.route("/toggle/Pause/<id>")
 def pause_service(id):
-    cur=mysql.connection.cursor()
+    conn = get_connection()
+    cur = conn.cursor()
 
     #update status in database 
     cur.execute("""update subscriptions
@@ -355,8 +361,8 @@ def pause_service(id):
     
     cur.execute("insert into pause_history(pause_start_date,subscription_id) values(CURDATE(),UUID_TO_BIN(%s))",(id,))
     
-    mysql.connection.commit()
-    cur.close()
+    conn.commit()
+    conn.close()
     return redirect(url_for("dashboard"))
     
 
@@ -365,7 +371,8 @@ def pause_service(id):
 #resume service logic
 @app.route("/toggle/Resume/<id>")
 def resume(id):
-    cur=mysql.connection.cursor()
+    conn = get_connection()
+    cur = conn.cursor()
 
     #resume status in database 
     cur.execute("""update subscriptions
@@ -386,30 +393,33 @@ def resume(id):
     # print(pause_days)
         
      
-    mysql.connection.commit()
-    cur.close()
+    conn.commit()
+    conn.close()
     return redirect(url_for("dashboard"))
 
 @app.route("/delete/<id>")
 def delete_service(id):
-    cur=mysql.connection.cursor()
+    conn = get_connection()
+    cur = conn.cursor()
     cur.execute("select service_id,service_provider_id from subscriptions where uuid_id= UUID_TO_BIN(%s)",(id,))
     service_details=cur.fetchone()
     print(service_details)
-    mysql.connection.cursor()
-    cur.close()
+    
+    conn.close()
  
-    cur=mysql.connection.cursor()
+    conn = get_connection()
+    cur = conn.cursor()
     cur.execute("delete from billing where subscription_id=UUID_TO_BIN(%s)",(id,))
     cur.execute("delete from pause_history where subscription_id=UUID_TO_BIN(%s)",(id,))     
     cur.execute(" delete from subscriptions where uuid_id=UUID_TO_BIN(%s)",(id,))
     
     flash("delete subscription successfully")
-    mysql.connection.commit()
-    cur.close()
+    conn.commit()
+    conn.close()
     print("service id that we have to delete ",service_details)
     
-    cur=mysql.connection.cursor()
+    conn = get_connection()
+    cur = conn.cursor()
 
     cur.execute("select * from subscriptions where service_id=%s",(service_details["service_id"],))
     exist_subs_dlt_service=cur.fetchone()
@@ -423,15 +433,16 @@ def delete_service(id):
 
 
 
-    mysql.connection.commit()
-    cur.close()
+    conn.commit()
+    conn.close()
     return redirect(url_for("dashboard"))
 
 #pause_details _page
 
 @app.route('/pause_details/<id>')
 def pause_details(id):
-    cur = mysql.connection.cursor()
+    conn = get_connection()
+    cur = conn.cursor()
 
     #Get subscription
     cur.execute("""SELECT 
@@ -489,7 +500,7 @@ def pause_details(id):
         extended_end_date=orignal_end_date+timedelta(days=total_pause_days)
     print("extended end date is :",extended_end_date)
     
-    
+    conn.close()
     
     return render_template(
         'pause_details.html',
@@ -504,7 +515,8 @@ def pause_details(id):
 
 @app.route('/generate_bill/<id>')
 def generate_bill(id):
-    cur = mysql.connection.cursor()
+    conn = get_connection()
+    cur = conn.cursor() 
 
     # subscription + price
     cur.execute("""
@@ -574,8 +586,8 @@ def generate_bill(id):
         
 
     
-    mysql.connection.commit()
-    cur.close()
+    conn.commit()
+    conn.close()
 
     return render_template(
     "bill.html",
@@ -596,7 +608,8 @@ def generate_bill(id):
 #payment status
 @app.route("/toggle/paid/<id>")
 def to_paid(id):
-    cur=mysql.connection.cursor()
+    conn = get_connection()
+    cur = conn.cursor()
 
     cur.execute("SELECT * FROM billing WHERE subscription_id=UUID_TO_BIN(%s)", (id,))
     bill = cur.fetchone()
@@ -607,15 +620,16 @@ def to_paid(id):
 
     #update status to paid 
     cur.execute("Update Billing set bill_status='unpaid' where subscription_id=UUID_TO_BIN(%s)",(id,))
-    mysql.connection.commit()
-    cur.close()
+    conn.commit()
+    conn.close()
     
     return redirect(url_for("dashboard"))
     
 
 @app.route("/toggle/unpaid/<id>")
 def to_unpaid(id):
-    cur=mysql.connection.cursor()
+    conn = get_connection()
+    cur = conn.cursor()
     #update status to paid 
 
     cur.execute("SELECT * FROM billing WHERE subscription_id=UUID_TO_BIN(%s)", (id,))
@@ -627,8 +641,8 @@ def to_unpaid(id):
 
     cur.execute("Update Billing set bill_status='Paid' where subscription_id=UUID_TO_BIN(%s)",(id,))
     flash("paid bill")
-    mysql.connection.commit()
-    cur.close()
+    conn.commit()
+    conn.close()
     
     return redirect(url_for("dashboard"))
 
@@ -647,7 +661,8 @@ def about():
 
 @app.route("/editservice/<id>", methods=["GET", "POST"])
 def edit_service(id):
-    cur = mysql.connection.cursor()
+    conn = get_connection()
+    cur = conn.cursor()
 
     
     cur.execute("""
@@ -756,13 +771,13 @@ def edit_service(id):
             WHERE uuid_id=UUID_TO_BIN(%s)
         """, (start_date, end_date, daily_quantity, id))
 
-        mysql.connection.commit()
-        cur.close()
+        conn.commit()
+        conn.close()
 
         flash("Service updated successfully!", "success")
         return redirect(url_for("dashboard"))
 
-    cur.close()
+    conn.close()
     return render_template("edit_service.html", service=service)
 
     
