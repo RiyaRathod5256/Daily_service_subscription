@@ -195,16 +195,16 @@ background:white;
 color:#2563eb;
 }
 
-/* SERVICE TAGS */
+/* service  TAGS */
 
-.service-tags{
+.service -tags{
 margin-top:25px;
 display:flex;
 gap:14px;
 flex-wrap:wrap;
 }
 
-.service-tags span{
+.service -tags span{
 background:rgba(255,255,255,0.25);
 color:white;
 
@@ -218,7 +218,7 @@ backdrop-filter:blur(10px);
 transition:0.3s;
 }
 
-.service-tags span:hover{
+.service -tags span:hover{
 background:white;
 color:#2563eb;
 transform:translateY(-2px);

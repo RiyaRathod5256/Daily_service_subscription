@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Add Service</title>
+<title>Add service </title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -71,7 +71,7 @@ box-shadow:0 10px 25px rgba(37,99,235,0.5);
 
 /* FORM GRID */
 
-#serviceForm{
+#service Form{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:20px;
@@ -141,7 +141,7 @@ box-shadow:0 12px 30px rgba(37,99,235,0.5);
 
 @media(max-width:700px){
 
-#serviceForm{
+#service Form{
 grid-template-columns:1fr;
 }
 
@@ -270,23 +270,23 @@ transform:translateX(0);
 {%endwith%}
 
 <div class="header">
-<h2>Add New Service</h2>
+<h2>Add New service </h2>
 </div>
 
 
 
-<form id="serviceForm" method="POST" action="/addservice">
+<form id="service Form" method="POST" action="/addservice ">
 
 <div class="form-group">
-<label>Service Name</label>
-<input type="text" id="service_name" name="service_name"
+<label>service  Name</label>
+<input type="text" id="service _name" name="service _name"
 required minlength="3" 
 maxlength="50"
-placeholder="Enter service name">
+placeholder="Enter service  name">
 </div>
 
 <div class="form-group">
-<label>Service Provider</label>
+<label>service  Provider</label>
 <input type="text" id="provider" name="provider"
 required placeholder="Enter provider name"
 minlength="1"
@@ -330,7 +330,7 @@ max="100"  placeholder="Enter quantity">
 <input type="date" id="end" name="end" required>
 </div>
 
-<button class="submit-btn" type="submit">Save Service</button>
+<button class="submit-btn" type="submit">Save service </button>
 
 </form>
 
@@ -349,7 +349,7 @@ max="100"  placeholder="Enter quantity">
 <script>
 const startInput = document.getElementById("start");
 const endInput = document.getElementById("end");
-const form = document.getElementById("serviceForm");
+const form = document.getElementById("service Form");
 
 // Current date
 const today = new Date();

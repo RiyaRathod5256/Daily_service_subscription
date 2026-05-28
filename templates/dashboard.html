@@ -175,9 +175,9 @@ font-weight:700;
 margin-top:5px;
 }
 
-/* ADD SERVICE BUTTON */
+/* ADD service  BUTTON */
 
-.add-service-container{
+.add-service -container{
 display:flex;
 justify-content:center;
 margin-bottom:40px;
@@ -404,9 +404,9 @@ flex-direction:column;
 
 </div>
 
-<div class="add-service-container">
-<a href="/addservice" style="text-decoration:none;">
-<button class="add-btn"><i class="fas fa-plus"></i> Add Service</button>
+<div class="add-service -container">
+<a href="/addservice " style="text-decoration:none;">
+<button class="add-btn"><i class="fas fa-plus"></i> Add service </button>
 </a>
 </div>
 
@@ -416,7 +416,7 @@ flex-direction:column;
 
 <thead>
 <tr>
-<th>Service</th>
+<th>service </th>
 <th>Start Date</th>
 <th>End Date</th>
 <th>Status</th>
@@ -432,13 +432,13 @@ flex-direction:column;
 
 <tbody>
 
-{% if subscriptions and subscriptions|length > 0 %}
+{% if subscriptions  and subscriptions |length > 0 %}
 
-{% for sub in subscriptions %}
+{% for sub in subscriptions  %}
 
 <tr>
 
-<td>{{ sub["service_name"] }}</td>
+<td>{{ sub["service _name"] }}</td>
 
 <td>{{ sub["start_date"] }}</td>
 
@@ -475,7 +475,7 @@ flex-direction:column;
 <div class="action-group">
 
 <!-- ✏ EDIT BUTTON -->
-<a href="/editservice/{{ sub.uuid }}" class="btn-icon">
+<a href="/editservice /{{ sub.uuid }}" class="btn-icon">
 <i class="fas fa-pen"></i> Edit
 </a>
 
@@ -528,7 +528,7 @@ onclick="return confirm('Delete this subscription?')">
 <tr>
 <td colspan="6" class="no-data">
 <i class="fas fa-box-open" style="font-size:2rem;"></i><br>
-No subscriptions found. Click “Add Service” to get started.
+No subscriptions  found. Click “Add service ” to get started.
 </td>
 </tr>
 
@@ -539,7 +539,7 @@ No subscriptions found. Click “Add Service” to get started.
 </table>
 
 <div class="table-footer-hint">
-<span>{{ subscriptions|length }} service(s) listed</span>
+<span>{{ subscriptions |length }} service (s) listed</span>
 <span>upcoming bills soon</span>
 </div>
 
