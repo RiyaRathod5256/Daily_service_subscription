@@ -115,51 +115,51 @@ border-radius: 8px;
 
 
 <div class="form-group">
-<label>service  Name</label>
-<input type="text" name="service _name"
-value="{{ service .service _name }}" required minlength="2" maxlength="20">
+<label>service Name</label>
+<input type="text" name="service_name"
+value="{{ service .service_name }}" required minlength="2" maxlength="20">
 </div>
 
 <div class="form-group">
 <label>service  Provider</label>
 <input type="text" name="provider"
-value="{{ service .service _provider_name }}" required minlength="2" maxlength="20">
+value="{{ service.service_provider_name }}" required minlength="2" maxlength="20">
 </div>
 
 <div class="form-group">
 <label>Provider Number</label>
 <input type="tel" name="number"
-value="{{ service .service _provider_number }}" required pattern="[0-9]{10}" minlength="10" maxlength="10">
+value="{{ service.service_provider_number }}" required pattern="[0-9]{10}" minlength="10" maxlength="10">
 </div>
 
 <div class="form-group">
 <label>Provider Address</label>
 <input type="text" name="address"
-value="{{ service .service _provider_address }}" required minlength="2" maxlength="70">
+value="{{ service.service_provider_address }}" required minlength="2" maxlength="70">
 </div>
 
 <div class="form-group">
 <label>Price per Day</label>
 <input type="number" name="price"
-value="{{ service .price_per_day }}" required min="1" step="0.01" min="2" max="10000">
+value="{{ service.price_per_day }}" required min="1" step="0.01" min="2" max="10000">
 </div>
 
 <div class="form-group">
 <label>Daily Quantity</label>
 <input type="number" name="quantity"
-value="{{ service .daily_quantity }}" required min="1" max="100" >
+value="{{ service.daily_quantity }}" required min="1" max="100" >
 </div>
 
 <div class="form-group">
 <label>Start Date</label>
 <input type="date" id="start" name="start"
-value="{{ service .start_date }}" required>
+value="{{ service.start_date }}" required>
 </div>
 
 <div class="form-group">
 <label>End Date</label>
 <input type="date" id="end" name="end"
-value="{{ service .end_date }}" required>
+value="{{ service.end_date }}" required>
 </div>
 
 <button class="submit-btn">Update service </button>
