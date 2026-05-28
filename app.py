@@ -778,7 +778,7 @@ def edit_service(id):
         return redirect(url_for("dashboard"))
 
     conn.close()
-    return render_template("edit_service.html", service=service )
+    return render_template("edit_service.html",service=service )
 
     
     
