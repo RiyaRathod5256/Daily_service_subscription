@@ -208,7 +208,7 @@ def dashboard():
             due+=1
         
     conn.close()
-    return render_template("dashboard.html",subscriptions =subscriptions_list,active=active,paused=paused,due=due,total=total,)
+    return render_template("dashboard.html",subscriptions=subscriptions_list,active=active,paused=paused,due=due,total=total,)
 
 @app.route("/logout")
 def logout():
@@ -451,7 +451,7 @@ def pause_details(id):
                    subscriptions.start_date,
                    subscriptions.end_date ,
                    subscriptions.status
-                   From subscriptions  JOIN service 
+                   From subscriptions JOIN service 
                     on subscriptions.service_id=service.service_id
                 where subscriptions.uuid_id=UUID_TO_BIN(%s)""",(id,))
     subs= cur.fetchone()
@@ -790,5 +790,3 @@ def edit_service(id):
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8000,debug=True)
-
-   
